@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Ensaio - EdyMichaelCover</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+      font-family:Arial, Helvetica, sans-serif;
+    }
+
+    body{
+      background:#000;
+      color:#fff;
+      padding:20px;
+    }
+
+    .container{
+      max-width:1300px;
+      margin:0 auto;
+    }
+
+    .topo{
+      text-align:center;
+      margin-bottom:25px;
+      padding:20px;
+      border:2px solid #d4af37;
+      border-radius:16px;
+      background:linear-gradient(180deg,#111,#000);
+      box-shadow:0 0 20px rgba(212,175,55,0.15);
+    }
+
+    .topo h1{
+      color:#d4af37;
+      font-size:32px;
+      margin-bottom:8px;
+    }
+
+    .topo p{
+      color:#ddd;
+      font-size:15px;
+    }
+
+    .relogio-palco{
+      margin-top:12px;
+      font-size:24px;
+      color:#f7dc8c;
+      font-weight:bold;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      gap:20px;
+    }
+
+    .card{
+      background:#111;
+      border:1px solid #d4af37;
+      border-radius:14px;
+      padding:18px;
+      box-shadow:0 0 12px rgba(212,175,55,0.08);
+      margin-bottom:20px;
+    }
+
+    .card h2{
+      color:#d4af37;
+      margin-bottom:14px;
+      font-size:22px;
+    }
+
+    .linha{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .linha-3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .linha-1{
+      display:block;
+      margin-bottom:12px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      color:#f0d98a;
+      font-size:14px;
+    }
+
+    input, select, textarea{
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #555;
+      background:#1b1b1b;
+      color:#fff;
+      outline:none;
+    }
+
+    textarea{
+      min-height:90px;
+      resize:vertical;
+    }
+
+    .botoes{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    button{
+      padding:11px 16px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:bold;
+      transition:0.2s;
+    }
+
+    .btn-dourado{
+      background:#d4af37;
+      color:#000;
+    }
+
+    .btn-escuro{
+      background:#333;
+      color:#fff;
+      border:1px solid #d4af37;
+    }
+
+    .btn-vermelho{
+      background:#8b1e1e;
+      color:#fff;
+    }
+
+    .status-box{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .status{
+      background:#1a1a1a;
+      border:1px solid #444;
+      border-radius:12px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .status h3{
+      color:#f0d98a;
+      font-size:14px;
+      margin-bottom:6px;
+    }
+
+    .status p{
+      font-size:24px;
+      font-weight:bold;
+      color:#fff;
+    }
+
+    .tempo-box{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .tempo-item{
+      background:#1a1a1a;
+      border:1px solid #444;
+      border-radius:12px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .tempo-item h4{
+      color:#f0d98a;
+      margin-bottom:6px;
+      font-size:14px;
+    }
+
+    .tempo-item p{
+      font-size:20px;
+      font-weight:bold;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:15px;
+      font-size:14px;
+    }
+
+    th, td{
+      border:1px solid #555;
+      padding:10px;
+      text-align:center;
+    }
+
+    th{
+      background:#d4af37;
+      color:#000;
+    }
+
+    tr:nth-child(even){
+      background:#151515;
+    }
+
+    .ranking-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px;
+      border:1px solid #444;
+      border-radius:10px;
+      margin-bottom:10px;
+      background:#151515;
+    }
+
+    .ranking-item strong{
+      color:#f0d98a;
+    }
+
+    .bloco-checks{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .check-card{
+      border:1px solid #444;
+      border-radius:12px;
+      padding:12px;
+      background:#161616;
+    }
+
+    .check-card h4{
+      color:#d4af37;
+      margin-bottom:8px;
+    }
+
+    .check-linha{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin:8px 0;
+    }
+
+    .check-linha input[type="checkbox"]{
+      width:auto;
+      transform:scale(1.1);
+    }
+
+    .relatorio{
+      background:#0f0f0f;
+      border:1px dashed #d4af37;
+      border-radius:12px;
+      padding:14px;
+      margin-top:15px;
+      white-space:pre-wrap;
+      line-height:1.6;
+      display:none;
+    }
+
+    .alerta{
+      margin-top:12px;
+      padding:12px;
+      border-radius:10px;
+      font-weight:bold;
+      display:none;
+    }
+
+    .alerta-atraso{
+      background:#4a1d1d;
+      color:#ffd1d1;
+      border:1px solid #ff6b6b;
+    }
+
+    .rodape{
+      margin-top:20px;
+      text-align:center;
+      color:#999;
+      font-size:13px;
+    }
+
+    .grafico-box{
+      background:#0d0d0d;
+      border-radius:12px;
+      padding:12px;
+      margin-top:15px;
+      border:1px solid #333;
+    }
+
+    @media(max-width:980px){
+      .grid,
+      .linha,
+      .linha-3,
+      .bloco-checks,
+      .tempo-box{
+        grid-template-columns:1fr;
+      }
+
+      .status-box{
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topo">
+      <h1>🎭 Sistema de Ensaio - EdyMichaelCover</h1>
+      <p>Painel visual estilo produção de show • ranking • atrasos • relatório mensal • PDF</p>
+      <div id="relogioDigital" class="relogio-palco">--:--:--</div>
+    </div>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h2>Cadastro do Ensaio</h2>
+
+          <div class="linha-3">
+            <div>
+              <label>Data do ensaio</label>
+              <input type="date" id="dataEnsaio">
+            </div>
+            <div>
+              <label>Horário oficial de início</label>
+              <input type="time" id="horaInicioOficial" value="09:00">
+            </div>
+            <div>
+              <label>Duração em minutos</label>
+              <input type="number" id="duracaoEnsaio" value="60" min="1">
+            </div>
+          </div>
+
+          <div class="linha">
+            <div>
+              <label>Tipo de ensaio</label>
+              <select id="tipoEnsaio">
+                <option>Ensaio Geral</option>
+                <option>Coreografia</option>
+                <option>Marcação de palco</option>
+                <option>Passagem de som</option>
+                <option>Figurino</option>
+              </select>
+            </div>
+            <div>
+              <label>Tolerância de atraso (min)</label>
+              <input type="number" id="toleranciaAtraso" value="5" min="0">
+            </div>
+          </div>
+
+          <div class="linha-1">
+            <label>Observações do ensaio</label>
+            <textarea id="observacao" placeholder="Ex.: revisar entrada de Dangerous, trocar formação final, ajustar tempo de Beat It..."></textarea>
+          </div>
+
+          <h2 style="margin-top:20px;">Equipe</h2>
+
+          <div class="bloco-checks">
+            <div class="check-card">
+              <h4>Patrick</h4>
+              <div class="check-linha">
+                <input type="checkbox" id="presentePatrick" checked>
+                <span>Presente</span>
+              </div>
+              <label>Hora de chegada</label>
+              <input type="time" id="chegadaPatrick" value="09:00">
+            </div>
+
+            <div class="check-card">
+              <h4>Abizael</h4>
+              <div class="check-linha">
+                <input type="checkbox" id="presenteAbizael" checked>
+                <span>Presente</span>
+              </div>
+              <label>Hora de chegada</label>
+              <input type="time" id="chegadaAbizael" value="09:00">
+            </div>
+
+            <div class="check-card">
+              <h4>Renan</h4>
+              <div class="check-linha">
+                <input type="checkbox" id="presenteRenan" checked>
+                <span>Presente</span>
+              </div>
+              <label>Hora de chegada</label>
+              <input type="time" id="chegadaRenan" value="09:00">
+            </div>
+
+            <div class="check-card">
+              <h4>Jhonny Mendes</h4>
+              <div class="check-linha">
+                <input type="checkbox" id="presenteJhonny" checked>
+                <span>Presente</span>
+              </div>
+              <label>Hora de chegada</label>
+              <input type="time" id="chegadaJhonny" value="09:00">
+            </div>
+          </div>
+
+          <h2 style="margin-top:20px;">Controle do Ensaio</h2>
+
+          <div class="tempo-box">
+            <div class="tempo-item">
+              <h4>Relógio do sistema</h4>
+              <p id="horaAtualPainel">--:--:--</p>
+            </div>
+            <div class="tempo-item">
+              <h4>Entrada registrada</h4>
+              <p id="horaEntrada">--:--:--</p>
+            </div>
+            <div class="tempo-item">
+              <h4>Saída registrada</h4>
+              <p id="horaSaida">--:--:--</p>
+            </div>
+          </div>
+
+          <div class="tempo-box">
+            <div class="tempo-item">
+              <h4>Contagem regressiva</h4>
+              <p id="contadorEnsaio">00:00</p>
+            </div>
+            <div class="tempo-item">
+              <h4>Status do ensaio</h4>
+              <p id="statusEnsaio">Parado</p>
+            </div>
+            <div class="tempo-item">
+              <h4>Atrasos hoje</h4>
+              <p id="atrasosHojePainel">0</p>
+            </div>
+          </div>
+
+          <div id="alertaAtraso" class="alerta alerta-atraso"></div>
+
+          <div class="botoes">
+            <button class="btn-escuro" onclick="registrarEntradaTempoReal()">Registrar entrada</button>
+            <button class="btn-escuro" onclick="registrarSaidaTempoReal()">Registrar saída</button>
+            <button class="btn-dourado" onclick="iniciarContador()">Iniciar contador</button>
+            <button class="btn-escuro" onclick="pararContador()">Parar contador</button>
+            <button class="btn-dourado" onclick="registrarEnsaio()">Registrar ensaio</button>
+            <button class="btn-escuro" onclick="gerarRelatorio()">Gerar relatório</button>
+            <button class="btn-dourado" onclick="salvarPDF()">Salvar PDF do ensaio</button>
+            <button class="btn-dourado" onclick="exportarRelatorioMensalPDF()">PDF mensal</button>
+            <button class="btn-escuro" onclick="limparFormulario()">Limpar campos</button>
+            <button class="btn-vermelho" onclick="apagarTudo()">Apagar histórico</button>
+          </div>
+
+          <div id="relatorio" class="relatorio"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <h2>Painel Visual de Produção</h2>
+
+          <div class="status-box">
+            <div class="status">
+              <h3>Total de Ensaios</h3>
+              <p id="totalEnsaios">0</p>
+            </div>
+            <div class="status">
+              <h3>Presentes Hoje</h3>
+              <p id="presentesHoje">0</p>
+            </div>
+            <div class="status">
+              <h3>Atrasos Hoje</h3>
+              <p id="atrasosHoje">0</p>
+            </div>
+            <div class="status">
+              <h3>Pontos Máximos</h3>
+              <p id="pontosMaximos">0</p>
+            </div>
+          </div>
+
+          <h2 style="margin-top:20px;">Ranking da Equipe</h2>
+          <div id="ranking"></div>
+
+          <h2 style="margin-top:20px;">Desempenho dos Dançarinos</h2>
+          <div class="grafico-box">
+            <canvas id="graficoDesempenho"></canvas>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Histórico de Ensaios</h2>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th>Tipo</th>
+                  <th>Presentes</th>
+                  <th>Atrasos</th>
+                  <th>Pontos</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaHistorico"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Resumo Mensal</h2>
+          <div id="resumoMensal" class="relatorio" style="display:block;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rodape">
+      EdyMichaelCover • Sistema pronto para GitHub • arquivo único index.html
+    </div>
+  </div>
+
+  <script>
+    const NOMES_EQUIPE = ["Patrick", "Abizael", "Renan", "Jhonny Mendes"];
+
+    let ensaios = JSON.parse(localStorage.getItem("ensaiosEdyShow")) || [];
+
+    let ranking = JSON.parse(localStorage.getItem("rankingEdyShow")) || {
+      "Patrick": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+      "Abizael": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+      "Renan": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+      "Jhonny Mendes": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 }
+    };
+
+    let horaEntradaReal = "";
+    let horaSaidaReal = "";
+    let contadorInterval = null;
+    let segundosRestantes = 0;
+    let grafico = null;
+
+    function hojeFormatado() {
+      const hoje = new Date();
+      const ano = hoje.getFullYear();
+      const mes = String(hoje.getMonth() + 1).padStart(2, "0");
+      const dia = String(hoje.getDate()).padStart(2, "0");
+      return `${ano}-${mes}-${dia}`;
+    }
+
+    document.getElementById("dataEnsaio").value = hojeFormatado();
+
+    function atualizarRelogioDigital() {
+      const agora = new Date();
+      const hora = agora.toLocaleTimeString("pt-BR");
+      document.getElementById("relogioDigital").innerText = hora;
+      document.getElementById("horaAtualPainel").innerText = hora;
+    }
+
+    setInterval(atualizarRelogioDigital, 1000);
+    atualizarRelogioDigital();
+
+    function formatarSegundos(total) {
+      const min = Math.floor(total / 60);
+      const seg = total % 60;
+      return `${String(min).padStart(2, "0")}:${String(seg).padStart(2, "0")}`;
+    }
+
+    function iniciarContador() {
+      const duracao = Number(document.getElementById("duracaoEnsaio").value) || 60;
+      segundosRestantes = duracao * 60;
+
+      if (contadorInterval) {
+        clearInterval(contadorInterval);
+      }
+
+      document.getElementById("statusEnsaio").innerText = "Rodando";
+      document.getElementById("contadorEnsaio").innerText = formatarSegundos(segundosRestantes);
+
+      contadorInterval = setInterval(() => {
+        segundosRestantes--;
+        document.getElementById("contadorEnsaio").innerText = formatarSegundos(Math.max(segundosRestantes, 0));
+
+        if (segundosRestantes <= 0) {
+          clearInterval(contadorInterval);
+          contadorInterval = null;
+          document.getElementById("statusEnsaio").innerText = "Finalizado";
+          alert("⏰ O tempo do ensaio terminou.");
+        }
+      }, 1000);
+    }
+
+    function pararContador() {
+      if (contadorInterval) {
+        clearInterval(contadorInterval);
+        contadorInterval = null;
+      }
+      document.getElementById("statusEnsaio").innerText = "Parado";
+    }
+
+    function registrarEntradaTempoReal() {
+      const agora = new Date();
+      horaEntradaReal = agora.toLocaleTimeString("pt-BR");
+      document.getElementById("horaEntrada").innerText = horaEntradaReal;
+    }
+
+    function registrarSaidaTempoReal() {
+      const agora = new Date();
+      horaSaidaReal = agora.toLocaleTimeString("pt-BR");
+      document.getElementById("horaSaida").innerText = horaSaidaReal;
+    }
+
+    function converterHoraParaMinutos(hora) {
+      const [h, m] = hora.split(":").map(Number);
+      return (h * 60) + m;
+    }
+
+    function calcularPontos(presente, atrasado) {
+      if (!presente) return 0;
+      if (atrasado) return 5;
+      return 10;
+    }
+
+    function pegarEquipeFormulario() {
+      const horaOficial = document.getElementById("horaInicioOficial").value;
+      const tolerancia = Number(document.getElementById("toleranciaAtraso").value) || 0;
+      const oficialMin = converterHoraParaMinutos(horaOficial);
+
+      const equipe = [
+        {
+          nome: "Patrick",
+          presente: document.getElementById("presentePatrick").checked,
+          chegada: document.getElementById("chegadaPatrick").value
+        },
+        {
+          nome: "Abizael",
+          presente: document.getElementById("presenteAbizael").checked,
+          chegada: document.getElementById("chegadaAbizael").value
+        },
+        {
+          nome: "Renan",
+          presente: document.getElementById("presenteRenan").checked,
+          chegada: document.getElementById("chegadaRenan").value
+        },
+        {
+          nome: "Jhonny Mendes",
+          presente: document.getElementById("presenteJhonny").checked,
+          chegada: document.getElementById("chegadaJhonny").value
+        }
+      ];
+
+      return equipe.map(pessoa => {
+        let atrasado = false;
+
+        if (pessoa.presente && pessoa.chegada) {
+          const chegadaMin = converterHoraParaMinutos(pessoa.chegada);
+          atrasado = chegadaMin > (oficialMin + tolerancia);
+        }
+
+        return {
+          ...pessoa,
+          atrasado,
+          pontos: calcularPontos(pessoa.presente, atrasado)
+        };
+      });
+    }
+
+    function mostrarAlertaAtraso(equipe) {
+      const atrasados = equipe.filter(p => p.presente && p.atrasado);
+      const box = document.getElementById("alertaAtraso");
+
+      if (atrasados.length === 0) {
+        box.style.display = "none";
+        box.innerText = "";
+        return;
+      }
+
+      box.style.display = "block";
+      box.innerText = "⚠️ Atraso detectado: " + atrasados.map(p => p.nome).join(", ");
+    }
+
+    function registrarEnsaio() {
+      const data = document.getElementById("dataEnsaio").value;
+      const horaInicioOficial = document.getElementById("horaInicioOficial").value;
+      const duracao = Number(document.getElementById("duracaoEnsaio").value) || 60;
+      const tipo = document.getElementById("tipoEnsaio").value;
+      const observacao = document.getElementById("observacao").value;
+
+      const equipe = pegarEquipeFormulario();
+      mostrarAlertaAtraso(equipe);
+
+      let totalPresentes = 0;
+      let totalAtrasos = 0;
+      let totalPontos = 0;
+
+      equipe.forEach(dancarino => {
+        if (dancarino.presente) {
+          totalPresentes++;
+          ranking[dancarino.nome].presencas++;
+        } else {
+          ranking[dancarino.nome].faltas++;
+        }
+
+        if (dancarino.presente && dancarino.atrasado) {
+          totalAtrasos++;
+          ranking[dancarino.nome].atrasos++;
+        }
+
+        ranking[dancarino.nome].pontos += dancarino.pontos;
+        totalPontos += dancarino.pontos;
+      });
+
+      const ensaio = {
+        data,
+        horaInicioOficial,
+        duracao,
+        tipo,
+        observacao,
+        entradaReal: horaEntradaReal || "--:--:--",
+        saidaReal: horaSaidaReal || "--:--:--",
+        equipe,
+        totalPresentes,
+        totalAtrasos,
+        totalPontos
+      };
+
+      ensaios.push(ensaio);
+
+      localStorage.setItem("ensaiosEdyShow", JSON.stringify(ensaios));
+      localStorage.setItem("rankingEdyShow", JSON.stringify(ranking));
+
+      atualizarPainel();
+      gerarRelatorioTexto(ensaio);
+
+      alert("Ensaio registrado com sucesso.");
+    }
+
+    function atualizarPainel() {
+      document.getElementById("totalEnsaios").innerText = ensaios.length;
+
+      if (ensaios.length > 0) {
+        const ultimo = ensaios[ensaios.length - 1];
+        document.getElementById("presentesHoje").innerText = ultimo.totalPresentes;
+        document.getElementById("atrasosHoje").innerText = ultimo.totalAtrasos;
+        document.getElementById("atrasosHojePainel").innerText = ultimo.totalAtrasos;
+      } else {
+        document.getElementById("presentesHoje").innerText = 0;
+        document.getElementById("atrasosHoje").innerText = 0;
+        document.getElementById("atrasosHojePainel").innerText = 0;
+      }
+
+      let maiorPontuacao = 0;
+      Object.values(ranking).forEach(item => {
+        if (item.pontos > maiorPontuacao) {
+          maiorPontuacao = item.pontos;
+        }
+      });
+      document.getElementById("pontosMaximos").innerText = maiorPontuacao;
+
+      atualizarRanking();
+      atualizarTabela();
+      atualizarGrafico();
+      atualizarResumoMensal();
+    }
+
+    function atualizarRanking() {
+      const areaRanking = document.getElementById("ranking");
+      areaRanking.innerHTML = "";
+
+      const lista = Object.entries(ranking).sort((a, b) => b[1].pontos - a[1].pontos);
+
+      lista.forEach((item, index) => {
+        const nome = item[0];
+        const dados = item[1];
+
+        const div = document.createElement("div");
+        div.className = "ranking-item";
+        div.innerHTML = `
+          <div>
+            <strong>#${index + 1} ${nome}</strong><br>
+            <small>Presenças: ${dados.presencas} • Atrasos: ${dados.atrasos} • Faltas: ${dados.faltas}</small>
+          </div>
+          <div><strong>${dados.pontos} pts</strong></div>
+        `;
+        areaRanking.appendChild(div);
+      });
+    }
+
+    function atualizarTabela() {
+      const tabela = document.getElementById("tabelaHistorico");
+      tabela.innerHTML = "";
+
+      ensaios.slice().reverse().forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${formatarData(item.data)}</td>
+          <td>${item.tipo}</td>
+          <td>${item.totalPresentes}</td>
+          <td>${item.totalAtrasos}</td>
+          <td>${item.totalPontos}</td>
+        `;
+        tabela.appendChild(tr);
+      });
+    }
+
+    function atualizarGrafico() {
+      const ctx = document.getElementById("graficoDesempenho");
+
+      const labels = NOMES_EQUIPE;
+      const dados = labels.map(nome => ranking[nome].pontos);
+
+      if (grafico) {
+        grafico.destroy();
+      }
+
+      grafico = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Pontos acumulados",
+            data: dados,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              labels: {
+                color: "#ffffff"
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: {
+                color: "#ffffff"
+              },
+              grid: {
+                color: "rgba(255,255,255,0.1)"
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: "#ffffff"
+              },
+              grid: {
+                color: "rgba(255,255,255,0.1)"
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function formatarData(data) {
+      const partes = data.split("-");
+      return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    function gerarRelatorio() {
+      if (ensaios.length === 0) {
+        alert("Ainda não há ensaios registrados.");
+        return;
+      }
+      const ultimo = ensaios[ensaios.length - 1];
+      gerarRelatorioTexto(ultimo);
+    }
+
+    function gerarRelatorioTexto(ensaio) {
+      const box = document.getElementById("relatorio");
+      box.style.display = "block";
+
+      let texto = "";
+      texto += "RELATÓRIO DO ENSAIO\n";
+      texto += "============================\n";
+      texto += `Data: ${formatarData(ensaio.data)}\n`;
+      texto += `Tipo: ${ensaio.tipo}\n`;
+      texto += `Horário oficial: ${ensaio.horaInicioOficial}\n`;
+      texto += `Duração planejada: ${ensaio.duracao} min\n`;
+      texto += `Entrada registrada: ${ensaio.entradaReal}\n`;
+      texto += `Saída registrada: ${ensaio.saidaReal}\n`;
+      texto += `Presentes: ${ensaio.totalPresentes}\n`;
+      texto += `Atrasos: ${ensaio.totalAtrasos}\n`;
+      texto += `Pontuação total: ${ensaio.totalPontos}\n\n`;
+
+      texto += "EQUIPE\n";
+      texto += "----------------------------\n";
+
+      ensaio.equipe.forEach(pessoa => {
+        const status = pessoa.presente ? "Presente" : "Ausente";
+        const atraso = pessoa.atrasado && pessoa.presente ? " | Atrasado" : "";
+        texto += `${pessoa.nome}: ${status}${atraso} | Chegada: ${pessoa.chegada} | Pontos: ${pessoa.pontos}\n`;
+      });
+
+      texto += "\nOBSERVAÇÕES\n";
+      texto += "----------------------------\n";
+      texto += ensaio.observacao ? ensaio.observacao : "Sem observações.";
+
+      box.textContent = texto;
+    }
+
+    function salvarPDF() {
+      const texto = document.getElementById("relatorio").innerText;
+
+      if (!texto.trim()) {
+        alert("Primeiro gere o relatório do ensaio.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("Relatório de Ensaio - EdyMichaelCover", 14, 20);
+
+      doc.setFontSize(11);
+      const linhas = doc.splitTextToSize(texto, 180);
+      doc.text(linhas, 14, 32);
+
+      doc.save("Relatorio_Ensaio_EdyMichaelCover.pdf");
+    }
+
+    function gerarDadosMensais() {
+      const hoje = new Date();
+      const mesAtual = hoje.getMonth();
+      const anoAtual = hoje.getFullYear();
+
+      const ensaiosMes = ensaios.filter(item => {
+        const d = new Date(item.data + "T00:00:00");
+        return d.getMonth() === mesAtual && d.getFullYear() === anoAtual;
+      });
+
+      const resumo = {
+        quantidade: ensaiosMes.length,
+        presentes: 0,
+        atrasos: 0,
+        pontos: 0,
+        porPessoa: {
+          "Patrick": { presencas: 0, atrasos: 0, pontos: 0 },
+          "Abizael": { presencas: 0, atrasos: 0, pontos: 0 },
+          "Renan": { presencas: 0, atrasos: 0, pontos: 0 },
+          "Jhonny Mendes": { presencas: 0, atrasos: 0, pontos: 0 }
+        }
+      };
+
+      ensaiosMes.forEach(ensaio => {
+        resumo.presentes += ensaio.totalPresentes;
+        resumo.atrasos += ensaio.totalAtrasos;
+        resumo.pontos += ensaio.totalPontos;
+
+        ensaio.equipe.forEach(p => {
+          if (p.presente) resumo.porPessoa[p.nome].presencas++;
+          if (p.presente && p.atrasado) resumo.porPessoa[p.nome].atrasos++;
+          resumo.porPessoa[p.nome].pontos += p.pontos;
+        });
+      });
+
+      return resumo;
+    }
+
+    function atualizarResumoMensal() {
+      const box = document.getElementById("resumoMensal");
+      const resumo = gerarDadosMensais();
+
+      let texto = "";
+      texto += "RESUMO MENSAL\n";
+      texto += "============================\n";
+      texto += `Ensaios no mês: ${resumo.quantidade}\n`;
+      texto += `Total de presenças: ${resumo.presentes}\n`;
+      texto += `Total de atrasos: ${resumo.atrasos}\n`;
+      texto += `Pontos somados: ${resumo.pontos}\n\n`;
+
+      texto += "DESEMPENHO POR PESSOA\n";
+      texto += "----------------------------\n";
+
+      NOMES_EQUIPE.forEach(nome => {
+        const d = resumo.porPessoa[nome];
+        texto += `${nome}: Presenças ${d.presencas} | Atrasos ${d.atrasos} | Pontos ${d.pontos}\n`;
+      });
+
+      box.textContent = texto;
+    }
+
+    function exportarRelatorioMensalPDF() {
+      const resumo = gerarDadosMensais();
+      const hoje = new Date();
+      const mesNome = hoje.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      let texto = "";
+      texto += `RELATÓRIO MENSAL - ${mesNome.toUpperCase()}\n`;
+      texto += "========================================\n";
+      texto += `Ensaios no mês: ${resumo.quantidade}\n`;
+      texto += `Total de presenças: ${resumo.presentes}\n`;
+      texto += `Total de atrasos: ${resumo.atrasos}\n`;
+      texto += `Pontos somados: ${resumo.pontos}\n\n`;
+
+      texto += "DESEMPENHO POR PESSOA\n";
+      texto += "----------------------------------------\n";
+
+      NOMES_EQUIPE.forEach(nome => {
+        const d = resumo.porPessoa[nome];
+        texto += `${nome}: Presenças ${d.presencas} | Atrasos ${d.atrasos} | Pontos ${d.pontos}\n`;
+      });
+
+      doc.setFontSize(18);
+      doc.text("Relatório Mensal - EdyMichaelCover", 14, 20);
+
+      doc.setFontSize(11);
+      const linhas = doc.splitTextToSize(texto, 180);
+      doc.text(linhas, 14, 32);
+
+      doc.save("Relatorio_Mensal_EdyMichaelCover.pdf");
+    }
+
+    function limparFormulario() {
+      document.getElementById("horaInicioOficial").value = "09:00";
+      document.getElementById("duracaoEnsaio").value = "60";
+      document.getElementById("tipoEnsaio").value = "Ensaio Geral";
+      document.getElementById("toleranciaAtraso").value = "5";
+      document.getElementById("observacao").value = "";
+
+      document.getElementById("presentePatrick").checked = true;
+      document.getElementById("presenteAbizael").checked = true;
+      document.getElementById("presenteRenan").checked = true;
+      document.getElementById("presenteJhonny").checked = true;
+
+      document.getElementById("chegadaPatrick").value = "09:00";
+      document.getElementById("chegadaAbizael").value = "09:00";
+      document.getElementById("chegadaRenan").value = "09:00";
+      document.getElementById("chegadaJhonny").value = "09:00";
+
+      document.getElementById("relatorio").style.display = "none";
+      document.getElementById("alertaAtraso").style.display = "none";
+
+      horaEntradaReal = "";
+      horaSaidaReal = "";
+      document.getElementById("horaEntrada").innerText = "--:--:--";
+      document.getElementById("horaSaida").innerText = "--:--:--";
+    }
+
+    function apagarTudo() {
+      const confirmar = confirm("Tem certeza que deseja apagar todo o histórico de ensaios?");
+      if (!confirmar) return;
+
+      ensaios = [];
+      ranking = {
+        "Patrick": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+        "Abizael": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+        "Renan": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 },
+        "Jhonny Mendes": { pontos: 0, presencas: 0, atrasos: 0, faltas: 0 }
+      };
+
+      localStorage.setItem("ensaiosEdyShow", JSON.stringify(ensaios));
+      localStorage.setItem("rankingEdyShow", JSON.stringify(ranking));
+
+      atualizarPainel();
+      limparFormulario();
+
+      alert("Histórico apagado com sucesso.");
+    }
+
+    atualizarPainel();
+  </script>
+</body>
+</html>
