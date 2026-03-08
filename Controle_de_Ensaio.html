@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>EdyMichaelCover Testing System</title>
+
+<style>
+
+body{
+background:black;
+color:white;
+font-family:Arial;
+text-align:center;
+}
+
+h1{
+color:gold;
+}
+
+table{
+margin:auto;
+border-collapse:collapse;
+width:70%;
+}
+
+td,th{
+border:1px solid gold;
+padding:10px;
+}
+
+button{
+background:gold;
+color:black;
+padding:10px;
+margin:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+
+<h1>🎭 Assay Control</h1>
+
+<input id="nome" placeholder="Dancer's name">
+<input id="hora" placeholder="Arrival time">
+
+<button onclick="registrar()">Registrar</button>
+
+<table id="tabela">
+
+<tr>
+<th>Dancer</th>
+<th>Time</th>
+<th>Gift</th>
+</tr>
+
+</table>
+
+<script>
+
+function registrar(){
+
+let nome=document.getElementById("nome").value
+let hora=document.getElementById("hora").value
+
+let tabela=document.getElementById("tabela")
+
+let linha=tabela.insertRow()
+
+linha.insertCell(0).innerHTML=nome
+linha.insertCell(1).innerHTML=hora
+linha.insertCell(2).innerHTML="✔"
+
+}
+
+</script>
+
+</body>
+</html>
